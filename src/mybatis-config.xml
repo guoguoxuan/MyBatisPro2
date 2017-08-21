@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- properties 配置属性 -->
+	<!-- ① 下面的②不推荐 <properties resource="jdbc.properties"/> -->
+	<properties>
+	    <property name="jdbc.driverClassName" value="com.mysql.jdbc.Driver"/>
+	    <property name="jdbc.url" value="jdbc:mysql://localhost:3306/ly?useUnicod=true&amp;characterEncoding=UTF-8"/>
+	    <property name="jdbc.username" value="root"/>
+	    <property name="jdbc.password" value="123"/>
+	</properties>
+	
+	<!-- <typeAliases>
+	    typeAliases 给累的完成限定名去别名,方便使用
+		<typeAlias alias="Student" type="com.icat.model.Student"/>
+	</typeAliases> -->
+	
+	<typeAliases>
+	    <!-- 扫描包下所有类(推荐) -->
+	    <package name="com.icat.model"/>
+	</typeAliases>
+   
+    <!-- environments 开发环境 MyBatis支持多个环境，可以任意配置  可以写开发，测试，正式环境等-->
+	<environments default="development">	  
+		<environment id="development">		   
+		    <!-- transactionManager 事务管理器  支持JDBC和MANAGED(托管)-->
+			<transactionManager type="JDBC" />			
+			<!-- dataSource 数据源 UNPOOLED,POOLED,JNDI -->
+			<dataSource type="POOLED">
+			    <!-- property 属性 -->
+				<property name="driver" value="${jdbc.driverClassName}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!--mappers 引入映射文件  -->
+	<mappers>
+		<!-- <mapper resource="com/icat/mappers/StudentMapper.xml" /> -->		
+		<!-- <mapper class="com.icat.mappers.StudentMapper"/> -->
+		
+		<!-- 扫描包下所有类(推荐) -->
+		<package name="com.icat.mappers"/>
+	</mappers>
+
+</configuration>
