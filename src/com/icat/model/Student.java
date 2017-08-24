@@ -5,8 +5,7 @@ public class Student {
 	private Integer id;
 	private String name;
 	private String age;
-	//添加一对一属性，生成set() get()
-	private Address address;
+	
 	
 	//构造方法(默认)
 	public Student() {
@@ -50,19 +49,14 @@ public class Student {
 		this.age = age;
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
 
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", name=" + name + ", age=" + age
-				+ ", address=" + address + "]";
+		return "Student [id=" + id + ", name=" + name + ", age=" + age + "]";
 	}
+
+	
+	
 
 
 	

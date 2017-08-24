@@ -4,18 +4,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <!-- properties 配置属性 -->
-	<!-- ① 下面的②不推荐 <properties resource="jdbc.properties"/> -->
-	<properties>
-	    <property name="jdbc.driverClassName" value="com.mysql.jdbc.Driver"/>
-	    <property name="jdbc.url" value="jdbc:mysql://localhost:3306/ly?useUnicod=true&amp;characterEncoding=UTF-8"/>
-	    <property name="jdbc.username" value="root"/>
-	    <property name="jdbc.password" value="123"/>
-	</properties>
-	
-	<!-- <typeAliases>
-	    typeAliases 给累的完成限定名去别名,方便使用
-		<typeAlias alias="Student" type="com.icat.model.Student"/>
-	</typeAliases> -->
+    <properties resource="jdbc.properties"/>
 	
 	<typeAliases>
 	    <!-- 扫描包下所有类(推荐) -->
@@ -40,9 +29,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	
 	<!--mappers 引入映射文件  -->
 	<mappers>
-		<!-- <mapper resource="com/icat/mappers/StudentMapper.xml" /> -->		
-		<!-- <mapper class="com.icat.mappers.StudentMapper"/> -->
-		
 		<!-- 扫描包下所有类(推荐) -->
 		<package name="com.icat.mappers"/>
 	</mappers>

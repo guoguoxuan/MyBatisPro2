@@ -1,26 +1,23 @@
 package com.icat.mappers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.icat.model.Student;
 
-//映射
 public interface StudentMapper {
 	
-	//添加
-	public int add(Student student);
+	public List<Student> searchStudents(Map<String, Object> map);	
 	
-	public int update(Student student);
+	public List<Student> searchStudents2(Map<String, Object> map);	
 	
-	public int delete(Integer id);
+	public List<Student> searchStudents3(Map<String, Object> map);	
+
+	public List<Student> searchStudents4(Map<String, Object> map);	
+
+	public List<Student> searchStudents5(Map<String, Object> map);	
 	
-	//通ID查找学生
-	public Student findById(Integer id);
-	
-	//查询全部
-	public List<Student> find();
-	
-	//级联查询   一对一
-	public Student findStudentWithAddress(Integer id);
-	
+	//set
+	public int updateStudent(Student student);
+
 }

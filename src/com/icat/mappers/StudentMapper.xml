@@ -4,50 +4,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- mapper映射 , namespace=接口完整路径-->
 <mapper namespace="com.icat.mappers.StudentMapper">
-
-    <!-- insert添加  id=方法名   parameterType=路参(路径参数)-->
-    <!-- 如果mybatis-config.xml没有别名alias  需要些type全路径com.icat.model.Student-->
-    
-    <!-- <resultMap type="Student" id="StudentResult">
-		<id property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="age" column="age"/>
-		
-		外键连接     一对一
-		<result property="address.id" column="addressId"/>
-		<result property="address.sheng" column="sheng"/>
-		<result property="address.shi" column="shi"/>
-		<result property="address.qu" column="qu"/>
-	</resultMap> -->
-    
-    <!-- 第二种方式  一对一   重用性好 -->
-     <!-- <resultMap type="Address" id="AddressResult">
-        <id property="id" column="id"/>
-        <result property="sheng" column="sheng"/>
-        <result property="shi" column="shi"/>
-        <result property="qu" column="qu"/>
-    </resultMap>
-    
-    <resultMap type="Student" id="StudentResult">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="age" column="age"/>
-        association 关联
-        <association property="address" resultMap="AddressResult"/>
-    </resultMap> --> 
-    
-    <!-- 第三种方式  嵌套 -->
-    <!-- <resultMap type="Student" id="StudentResult">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="age" column="age"/>
-        <association property="address" javaType="Address">
-            <result property="id" column="id"/>
-            <result property="sheng" column="sheng"/>
-            <result property="shi" column="shi"/>
-            <result property="qu" column="qu"/>
-        </association>
-    </resultMap> -->
     
     
     <!-- 第四种方式   开发常用(推荐) -->
@@ -55,35 +11,92 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<id property="id" column="id"/>
 		<result property="name" column="name"/>
 		<result property="age" column="age"/>
-		<!-- column 带外键 -->
-		<association property="address" column="addressId" select="com.icat.mappers.AddressMapper.findById"></association>
 	</resultMap>
     
-    <select id="findStudentWithAddress" resultMap="StudentResult" parameterType="Integer">
-		select * from t_student t1,t_address t2 where t1.addressId=t2.id and t1.id=#{id}
-	</select>
-	
-	<insert id="add" parameterType="Student"  >	    
-	    <!-- #{Student 属性} -->
-		insert into t_student values(null,#{name},#{age})
-	</insert>
-	
-	<update id="update" parameterType="Student">
-	    update t_student set name=#{name},age=#{age} where id=#{id}	
-	</update>
-	
-	<delete id="delete" parameterType="Integer">
-	    delete from t_student where id=#{id}
-	</delete>
-	
-	<!-- resultType返回类型 -->
-	<select id="findById" parameterType="Integer" resultType="Student">
-	    select * from t_student where id=#{id} 
-	</select>
-	
-	<select id="find" resultMap="StudentResult">
-	    select * from t_student
-	</select>
-	
-
+    <!-- if 条件 -->
+    <select id="searchStudents" parameterType="Map" resultMap="StudentResult" >
+    	select * from t_student
+    	  where gradeId = #{gradeId}
+    	  <if test="name!=null">
+    	      and name like #{name}
+    	  </if>
+    	  <if test="age!=null">
+    	  	  and age=#{age}
+    	  </if>
+    </select>
+    
+    <!-- choose when otherwise 条件 -->
+    <select id="searchStudents2" parameterType="Map" resultMap="StudentResult" >
+    	select * from t_student
+    	  <choose>
+    	      <when test="searchBy=='gradeId'">
+    	      	  where gradeId=#{gradeId}
+    	      </when>
+    	      <when test="searchBy=='name'">
+    	      	  where name like #{name}
+    	      </when>
+    	      <otherwise>
+    	      	  where age=#{age}
+    	      </otherwise>
+    	  </choose>
+    </select>
+    
+    <!-- where 条件 (常用) -->
+    <select id="searchStudents3" parameterType="Map" resultMap="StudentResult">
+    	select * from t_student
+    	<where>
+    		<if test="gradeId!=null">
+    			gradeId=#{gradeId}
+    		</if>
+    		<if test="name!=null">
+    			and name like #{name}
+    		</if>
+    		<if test="age!=null">
+    			and age=#{age}
+    		</if>
+    	</where>
+    </select>
+    
+    <!-- trim 条件  加前缀或后缀-->
+    <select id="searchStudents4" parameterType="Map" resultMap="StudentResult">
+    	select * from t_student
+    	<trim prefix="where" prefixOverrides="and/or">
+    		<if test="gradeId!=null">
+    			gradeId=#{gradeId}
+    		</if>
+    		<if test="name!=null">
+    			and name like #{name}
+    		</if>
+    		<if test="age!=null">
+    			and age=#{age}
+    		</if>
+    	</trim>
+    </select>
+    
+    <!-- foreach 循环-->
+    <select id="searchStudents5" parameterType="Map" resultMap="StudentResult">
+    	select * from t_student
+    		<if test="gradeIds!=null">
+    			<where>
+    				gradeId in
+    				<foreach item="gradeId" collection="gradeIds" open="(" separator="," close=")">
+    					#{gradeId}
+    				</foreach>
+    			</where>
+    		</if>
+    </select>
+    
+    <update id="updateStudent" parameterType="Student">
+    	update t_student
+    	<set>
+    		<if  test="name!=null">
+    			name=#{name},
+    		</if>
+    		<if test="age!=null">
+    			age=#{age},
+    		</if>
+    	</set>
+    	where id=#{id}
+    </update>
+    
 </mapper> 
